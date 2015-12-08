@@ -41,7 +41,7 @@
 -type period()     :: cron_time() | {every, duration(), constraint()}.
 -type dom()        :: integer().
 -type dow()        :: mon | tue | wed | thu | fri | sat | sun.
--type callable()   :: mfa() | function().
+-type callable()   :: {M :: module(), F :: atom(), A :: [term()]} | function().
 -type run_when()   :: {once, cron_time()}
                     | {once, seconds()}
                     | {daily, period()}
@@ -90,7 +90,7 @@ once(When, Fun) ->
 
 %% @doc
 %% Cancel the job specified by the jobref.
--spec cancel/1 :: (job_ref()) -> ok.
+-spec cancel/1 :: (job_ref()) -> ok | undefined.
 cancel(JobRef) ->
     ecrn_control:cancel(JobRef).
 

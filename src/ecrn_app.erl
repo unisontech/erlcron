@@ -40,6 +40,7 @@ manual_stop() ->
 start(_StartType, _StartArgs) ->
     case ecrn_sup:start_link() of
         {ok, Pid} ->
+            setup(),
             {ok, Pid};
         Error ->
             Error
@@ -48,3 +49,13 @@ start(_StartType, _StartArgs) ->
 %% @private
 stop(_State) ->
     ok.
+
+setup() ->
+    case application:get_env(erlcron, crontab) of 
+        {ok, Crontab} ->
+            lists:foreach(fun(CronJob) ->
+                erlcron:cron(CronJob) 
+            end, Crontab);
+        undefined ->
+            ok
+    end.
